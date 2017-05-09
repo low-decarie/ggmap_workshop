@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "<style>\n.small-code pre code {\n  font-size: 1em;\n}\n</style>\n\n\nggmap\n========================================================\nauthor: Etienne Low-Décarie\n\n\n\nCreating maps\n===\nclass: small-code\n\n```{r}\nif(!require(ggmap)) {install.packages(\"ggmap\")}\nrequire(ggmap)\nif(!require(maptools)) {install.packages(\"maptools\")}\nrequire(maptools)\n```\n\nBasic world map\n===\nclass: small-code\n\n```{r fig.width=8, fig.height=3,echo=T}\nmap <- ggplot()+borders(\"world\", \n                        colour=\"gray50\",\n                        fill=\"gray50\")\nprint(map)\n```\n\nResource\n===\n\nCheatsheet:\nhttps://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf\n\n<iframe src=\"https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf\" width=\"1000\" height=\"800\">\n  <p>Your browser does not support iframes.</p>\n</iframe>\n\n\nPretty world map\n===\n\nbounding box lowerleftlon, lowerleftlat, upperrightlon, upperrightlat (a little glitchy for google maps)\n\n```{r fig.width=8, fig.height=3,echo=T, eval=F}\nmyLocation <- with(coord, c(min(LON),\n                            min(LAT), \n                            max(LON), \n                            max(LAT)))\n```\n\n```{r fig.width=8, fig.height=3,echo=T}\nmyLocation <- c(-179,-89,179,89)\nmyMap <- get_map(location=myLocation, \n                 source=\"stamen\", \n                 maptype=\"watercolor\",\n                 crop=FALSE) \n\nmyMap <- ggmap(myMap)\nprint(myMap)\n```\n\n\nLoad geo-referenced coral bleaching data\n===\n\nCoral bleaching data from ReefBase http://www.reefbase.org\n```{r}\ncoord <- read.csv(\"./Data/CoralBleaching_cleaned.csv\")\n```\n\nExtract bleaching events\n\n```{r}\ncoord <- coord[coord$BLEACHING_SEVERITY %in% c(\"Low\",\"Medium\",\"HIGH\"),]\ncoord$BLEACHING_SEVERITY <- factor(coord$BLEACHING_SEVERITY, levels=levels(coord$BLEACHING_SEVERITY)[c(2,3,1)])\n```\n\n\nAdd the data to the map\n===\n\n```{r fig.width=8, fig.height=3,echo=T}\nmap <- map+geom_point(data=coord,aes(x=LON,\n                                     y=LAT,\n                                     colour=BLEACHING_SEVERITY),\n                      alpha=0.5)\nprint(map)\n```\n\nFine tuning: Scales\n===\n\n```{r fig.width=8, fig.height=3,echo=T}\nmap <- map+\n  scale_colour_manual(values = c(\"Low\"=\"yellow\",\n                                 \"Medium\"=\"orange\",\n                                 \"HIGH\"=\"red\"))+\n  guides(colour = guide_legend(override.aes = list(alpha = 1))) #+\n  #facet_grid(YEAR~.)\n\nprint(map)\n```\n\nFine tuning: Facets\n===\n\n```{r fig.width=8, fig.height=6,echo=T}\nprint(map+facet_wrap(~YEAR))\n```\n\n\nExercise 1\n===\n\nCreate a coordinate file with the location of your house and the location of the house of your friends\n\nProduce maps from the data in \nHenry P, Le Lay G, Goudet J, Guisan A, Jahodová S, Besnard G (2009) Reduced genetic diversity, increased isolation and multiple introductions of invasive giant hogweed in the western Swiss Alps. Molecular Ecology 18: 2819-2831. \n[paper](http://dx.doi.org/10.1111/j.1365-294X.2009.04237.x)\n[data](http://datadryad.org/resource/doi:10.5061/dryad.1237)\n\n\n<div class=\"centered\">\n\n<script src=\"countdown.js\" type=\"text/javascript\"></script>\n<script type=\"application/javascript\">\nvar myCountdown1 = new Countdown({\n    \t\t\t\t\t\t\ttime: 300, \n\t\t\t\t\t\t\t\t\twidth:150, \n\t\t\t\t\t\t\t\t\theight:80, \n\t\t\t\t\t\t\t\t\trangeHi:\"minute\"\t// <- no comma on last item!\n\t\t\t\t\t\t\t\t\t});\n\n</script>\n\n</div>",
+    "created" : 1494311840511.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4122874637",
+    "id" : "622E772B",
+    "lastKnownWriteTime" : 1494312262,
+    "last_content_update" : 1494312262370,
+    "path" : "~/Documents/R/ggmap_workshop/ggmap.Rpres",
+    "project_path" : "ggmap.Rpres",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_presentation"
+}
